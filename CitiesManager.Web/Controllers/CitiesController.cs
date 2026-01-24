@@ -29,10 +29,10 @@ namespace CitiesManager.Web.Controllers
         }
 
         // GET: api/Cities/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<City>> GetCity(Guid id)
+        [HttpGet("{CityId}")]
+        public async Task<ActionResult<City>> GetCity(Guid CityId)
         {
-            var city = await _context.Cities.FindAsync(id);
+            var city = await _context.Cities.FindAsync(CityId);
 
             if (city == null)
             {
@@ -44,10 +44,10 @@ namespace CitiesManager.Web.Controllers
 
         // PUT: api/Cities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCity(Guid id, City city)
+        [HttpPut("{CityId}")]
+        public async Task<IActionResult> PutCity(Guid CityId, City city)
         {
-            if (id != city.CityId)
+            if (CityId != city.CityId)
             {
                 return BadRequest();
             }
@@ -60,7 +60,7 @@ namespace CitiesManager.Web.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CityExists(id))
+                if (!CityExists(CityId))
                 {
                     return NotFound();
                 }
@@ -78,17 +78,21 @@ namespace CitiesManager.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<City>> PostCity(City city)
         {
+            if(!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
             _context.Cities.Add(city);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCity", new { id = city.CityId }, city);
+            return CreatedAtAction("GetCity", new { CityId = city.CityId }, city);
         }
 
         // DELETE: api/Cities/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCity(Guid id)
+        [HttpDelete("{CityId}")]
+        public async Task<IActionResult> DeleteCity(Guid CityId)
         {
-            var city = await _context.Cities.FindAsync(id);
+            var city = await _context.Cities.FindAsync(CityId);
             if (city == null)
             {
                 return NotFound();
@@ -100,9 +104,9 @@ namespace CitiesManager.Web.Controllers
             return NoContent();
         }
 
-        private bool CityExists(Guid id)
+        private bool CityExists(Guid CityId)
         {
-            return _context.Cities.Any(e => e.CityId == id);
+            return _context.Cities.Any(e => e.CityId == CityId);
         }
     }
 }
