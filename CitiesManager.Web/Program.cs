@@ -11,7 +11,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     );
 
 builder.Services.AddEndpointsApiExplorer(); // Generate OpenAPI/Swagger documents for API endpoints
-builder.Services.AddSwaggerGen(); // Add Swagger generator services
+builder.Services.AddSwaggerGen(options =>
+options.IncludeXmlComments(Path.Combine
+(AppContext.BaseDirectory, "ApiDoc.xml"))); // Add Swagger generator services
 
 var app = builder.Build();
 
