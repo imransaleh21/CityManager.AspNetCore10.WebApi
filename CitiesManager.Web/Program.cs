@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using CitiesManager.Web.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,6 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddApiVersioning(config =>
+{
+    config.ApiVersionReader = new UrlSegmentApiVersionReader();
+});
+
 // Db Context is added as a service
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))

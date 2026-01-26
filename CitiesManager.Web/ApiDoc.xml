@@ -4,11 +4,17 @@
         <name>CitiesManager.Web</name>
     </assembly>
     <members>
-        <member name="M:CitiesManager.Web.Controllers.CitiesController.GetCities">
+        <member name="M:CitiesManager.Web.Controllers.v1.CitiesController.GetCities">
             <summary>
             To get all cities from database with cityId and cityName
             </summary>
             <returns>List of cities</returns>
+        </member>
+        <member name="M:CitiesManager.Web.Controllers.v2.CitiesController.GetCities">
+            <summary>
+            To get all cities name from database
+            </summary>
+            <returns>List of cities name</returns>
         </member>
         <member name="T:CitiesManager.Web.Migrations.Initial">
             <inheritdoc />
