@@ -1,3 +1,29 @@
-<div>
-  <h2>Hello from Cities Component!</h2>
+<div class="box">
+  <h2 class="text-large">Hello from Cities Component!</h2>
+  
+  <div class="table-container">
+    <h3>Cities List</h3>
+    
+    <table class="table w-100">
+      <thead>
+        <tr>
+          <th>City ID</th>
+          <th>City Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let city of cities">
+          <td>{{ city.cityId }}</td>
+          <td>{{ city.cityName }}</td>
+        </tr>
+        <tr *ngIf="cities.length === 0">
+          <td colspan="2" class="text-center text-grey">No cities available</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="mt">
+      <p><strong>Total Cities:</strong> {{ cities.length }}</p>
+    </div>
+  </div>
 </div>
