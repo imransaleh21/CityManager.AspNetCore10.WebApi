@@ -15,6 +15,21 @@ export class CitiesComponent implements OnInit {
   constructor(private citiesService: CitiesService) { }
 
   ngOnInit(): void {
-    this.cities = this.citiesService.getCities();
+    console.log('CitiesComponent ngOnInit called');
+    console.log('About to call getCities service...');
+    
+    this.citiesService.getCities()
+      .subscribe({
+        next: (response: City[]) => {
+          console.log('Received response from API:', response);
+          this.cities = response;
+        },
+        error: (error: any) => {
+          console.error('Error calling API:', error);
+        },
+        complete: () => {
+          console.log('API call completed');
+        }
+      });
   }
 }

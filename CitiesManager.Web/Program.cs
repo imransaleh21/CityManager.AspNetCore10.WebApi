@@ -43,6 +43,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:4222");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,7 +63,8 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Cities Manager API v1");
     options.SwaggerEndpoint("/swagger/v2/swagger.json", "Cities Manager API v2");
 }); // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-
+app.UseRouting();
+app.UseCors();
 app.UseAuthorization();
 
 app.MapControllers();
