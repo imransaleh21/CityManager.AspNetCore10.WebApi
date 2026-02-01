@@ -2,22 +2,54 @@
   <h2 class="text-large text-blue">Cities Manager</h2>
   
   <div class="flex">
-    <!-- LEFT SIDE: Cities List -->
+    <!-- LEFT SIDE: Manage Cities List -->
     <div class="flex-1">
       <div class="table-container">
-        <h3 class="border-bottom pb">Cities List</h3>
+        <h3 class="border-bottom pb">Manage Cities</h3>
         
         <table class="table w-100">
           <thead>
             <tr>
-              <th>City ID</th>
-              <th>City Name</th>
+              <th style="width: 35%;">City ID</th>
+              <th style="width: 35%;">City Name</th>
+              <th style="width: 30%;">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let city of cities">
-              <td class="text-grey">{{ city.cityId }}</td>
-              <td><strong>{{ city.cityName }}</strong></td>
+              <td class="text-grey" style="font-size: 0.85em;">{{ city.cityId }}</td>
+              <td>
+                <!-- Edit Mode -->
+                <input 
+                  *ngIf="isEditing(city)" 
+                  type="text" 
+                  class="form-input" 
+                  [(ngModel)]="editedCityName"
+                  style="width: 100%;"
+                />
+                <!-- View Mode -->
+                <strong *ngIf="!isEditing(city)">{{ city.cityName }}</strong>
+              </td>
+              <td>
+                <!-- Edit Mode Buttons -->
+                <div *ngIf="isEditing(city)">
+                  <button class="button button-green-back mr" (click)="saveEdit(city)" style="padding: 4px 8px; font-size: 0.9em;">
+                    ✓ Save
+                  </button>
+                  <button class="button" (click)="cancelEdit()" style="padding: 4px 8px; font-size: 0.9em;">
+                    ✕ Cancel
+                  </button>
+                </div>
+                <!-- View Mode Buttons -->
+                <div *ngIf="!isEditing(city)">
+                  <button class="button button-blue-back mr" (click)="startEdit(city)" style="padding: 4px 8px; font-size: 0.9em;">
+                    ✎ Edit
+                  </button>
+                  <button class="button button-red-back" (click)="deleteCity(city)" style="padding: 4px 8px; font-size: 0.9em;">
+                    🗑 Delete
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>

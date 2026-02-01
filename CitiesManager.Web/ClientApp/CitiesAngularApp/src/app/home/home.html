@@ -5,22 +5,20 @@
     
     <div class="card-container mt">
       <div class="card">
-        <h3 class="text-blue">View Cities</h3>
-        <p>Browse through all available cities in the database</p>
+        <h3 class="text-blue">Manage Cities</h3>
+        <p>View, edit, and delete cities in the database</p>
         <a [routerLink]="['/cities']" class="button button-blue-back mt">Go to Cities</a>
       </div>
-      
-      <div class="card">
-        <h3 class="text-green">Add City</h3>
-        <p>Add new cities to the database</p>
-        <button class="button button-green-back mt" disabled>Coming Soon</button>
-      </div>
-      
-      <div class="card">
-        <h3 class="text-red">Manage</h3>
-        <p>Edit or delete existing cities</p>
-        <button class="button button-red-back mt" disabled>Coming Soon</button>
-      </div>
+    </div>
+    
+    <div class="mt" style="max-width: 600px; margin: 40px auto;">
+      <h3 class="text-blue mb">Features</h3>
+      <ul class="list">
+        <li>✓ View all cities from the database</li>
+        <li>✓ Edit city names inline</li>
+        <li>✓ Delete cities with confirmation</li>
+        <li>✓ Real-time updates without page reload</li>
+      </ul>
     </div>
   </div>
 </div>

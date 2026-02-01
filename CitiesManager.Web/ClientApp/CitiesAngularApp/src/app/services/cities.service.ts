@@ -21,8 +21,19 @@ export class CitiesService {
   postCity(city: City): Observable<City> {
     let headers = new HttpHeaders();
     headers = headers.append('Authorization', 'BearerMytoken');
-
     return this.httpClient.post<City>(`${API_BASE_URL}v1/cities`, city, { headers: headers });
+  }
+
+  putCity(cityId: string, city: City): Observable<any> {
+    let headers = new HttpHeaders();
+    headers = headers.append('Authorization', 'BearerMytoken');
+    return this.httpClient.put(`${API_BASE_URL}v1/cities/${cityId}`, city, { headers: headers });
+  }
+
+  deleteCity(cityId: string): Observable<any> {
+    let headers = new HttpHeaders();
+    headers = headers.append('Authorization', 'BearerMytoken');
+    return this.httpClient.delete(`${API_BASE_URL}v1/cities/${cityId}`, { headers: headers });
   }
 }
 
