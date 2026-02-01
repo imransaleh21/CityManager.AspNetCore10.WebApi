@@ -1,26 +1,66 @@
 <div class="box">
   <h2 class="text-large text-blue">Cities Manager</h2>
   
-  <div class="table-container">
-    <h3 class="border-bottom pb">Cities List</h3>
-    
-    <table class="table w-100">
-      <thead>
-        <tr>
-          <th>City ID</th>
-          <th>City Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let city of cities">
-          <td class="text-grey">{{ city.cityId }}</td>
-          <td><strong>{{ city.cityName }}</strong></td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <div class="mt border-top pt">
-      <p class="text-blue"><strong>Total Cities:</strong> {{ cities.length }}</p>
+  <div class="flex">
+    <!-- LEFT SIDE: Cities List -->
+    <div class="flex-1">
+      <div class="table-container">
+        <h3 class="border-bottom pb">Cities List</h3>
+        
+        <table class="table w-100">
+          <thead>
+            <tr>
+              <th>City ID</th>
+              <th>City Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let city of cities">
+              <td class="text-grey">{{ city.cityId }}</td>
+              <td><strong>{{ city.cityName }}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="mt border-top pt">
+          <p class="text-blue"><strong>Total Cities:</strong> {{ cities.length }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Add City Form -->
+    <div class="flex-1">
+      <div class="table-container ml">
+        <h3 class="border-bottom pb">Add New City</h3>
+        
+        <form [formGroup]="postCityForm" (ngSubmit)="submitPostCityForm()">
+          <div class="form-field">
+            <div>
+              <label class="form-label">City Name:</label>
+            </div>
+            <div>
+              <input 
+                type="text" 
+                class="form-input" 
+                formControlName="cityName" 
+                placeholder="Enter city name"
+              />
+              <div *ngIf="postCity_CityNameControls.invalid && (postCity_CityNameControls.dirty || postCity_CityNameControls.touched || isPostCityFormSubmitted)" class="text-red mt">
+                <span *ngIf="postCity_CityNameControls.errors?.['required']">City name is required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-panel mt">
+            <button type="submit" class="button button-green-back">
+              Add City
+            </button>
+            <button type="button" class="button ml" (click)="postCityForm.reset(); isPostCityFormSubmitted = false">
+              Clear
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

@@ -1,9 +1,4 @@
-export class City {
-  cityId: string;
+export interface City {
+  cityId?: string;  // Optional - server generates this
   cityName: string;
-
-  constructor(cityId: string, cityName: string) {
-    this.cityId = cityId;
-    this.cityName = cityName;
-  }
 }
