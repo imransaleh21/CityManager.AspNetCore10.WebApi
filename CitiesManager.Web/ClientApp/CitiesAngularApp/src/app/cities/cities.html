@@ -1,8 +1,8 @@
 <div class="box">
-  <h2 class="text-large">Hello from Cities Component!</h2>
+  <h2 class="text-large text-blue">Cities Manager</h2>
   
   <div class="table-container">
-    <h3>Cities List</h3>
+    <h3 class="border-bottom pb">Cities List</h3>
     
     <table class="table w-100">
       <thead>
@@ -13,17 +13,14 @@
       </thead>
       <tbody>
         <tr *ngFor="let city of cities">
-          <td>{{ city.cityId }}</td>
-          <td>{{ city.cityName }}</td>
-        </tr>
-        <tr *ngIf="cities.length === 0">
-          <td colspan="2" class="text-center text-grey">No cities available</td>
+          <td class="text-grey">{{ city.cityId }}</td>
+          <td><strong>{{ city.cityName }}</strong></td>
         </tr>
       </tbody>
     </table>
     
-    <div class="mt">
-      <p><strong>Total Cities:</strong> {{ cities.length }}</p>
+    <div class="mt border-top pt">
+      <p class="text-blue"><strong>Total Cities:</strong> {{ cities.length }}</p>
     </div>
   </div>
 </div>

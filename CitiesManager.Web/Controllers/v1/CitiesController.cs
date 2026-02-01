@@ -29,7 +29,10 @@ namespace CitiesManager.Web.Controllers.v1
         [HttpGet]
         public async Task<ActionResult<IEnumerable<City>>> GetCities()
         {
-            return await _context.Cities.ToListAsync();
+            Console.WriteLine("GetCities API endpoint called");
+            var cities = await _context.Cities.ToListAsync();
+            Console.WriteLine($"Returning {cities.Count} cities");
+            return cities;
         }
 
         // GET: api/Cities/5

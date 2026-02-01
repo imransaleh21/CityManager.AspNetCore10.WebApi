@@ -44,9 +44,14 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddCors(options => {
-    options.AddDefaultPolicy(builder =>
+    options.AddDefaultPolicy(policyBuilder =>
     {
-        builder.WithOrigins("http://localhost:4222");
+        policyBuilder
+        .WithOrigins(builder.Configuration.GetSection("AllowedOrigin")
+            .Get<string[]>()!)
+            .WithHeaders("Authorization", "Origin", "Content-Type", "Accept")
+            //.AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
