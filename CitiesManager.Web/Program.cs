@@ -1,5 +1,5 @@
 using Asp.Versioning;
-using CitiesManager.Web.DataBaseContext;
+using CitiesManager.Infrastructure.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 

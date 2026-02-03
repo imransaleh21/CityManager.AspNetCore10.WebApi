@@ -1,13 +1,7 @@
 ﻿using Asp.Versioning;
-using CitiesManager.Web.DataBaseContext;
-using CitiesManager.Web.Models;
-using Microsoft.AspNetCore.Http;
+using CitiesManager.Infrastructure.DataBaseContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CitiesManager.Web.Controllers.v2
 {

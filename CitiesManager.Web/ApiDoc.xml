@@ -16,18 +16,6 @@
             </summary>
             <returns>List of cities name</returns>
         </member>
-        <member name="T:CitiesManager.Web.Migrations.Initial">
-            <inheritdoc />
-        </member>
-        <member name="M:CitiesManager.Web.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CitiesManager.Web.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CitiesManager.Web.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
         <member name="T:Program">
             <summary>
             Auto-generated public partial Program class for top-level statement apps.
