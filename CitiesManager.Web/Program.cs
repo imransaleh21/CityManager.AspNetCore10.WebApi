@@ -80,6 +80,7 @@ var app = builder.Build();
 
 app.UseHsts();
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseSwagger(); // Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwaggerUI(options =>
