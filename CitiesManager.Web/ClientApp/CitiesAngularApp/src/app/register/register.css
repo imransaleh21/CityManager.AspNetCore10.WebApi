@@ -1,0 +1,19 @@
+/* Register component specific styles */
+
+.form-container {
+  max-width: 500px;
+  margin: 50px auto;
+}
+
+input.ng-valid:not(.ng-untouched) {
+  border-color: #42A948;
+}
+
+input.ng-invalid:not(.ng-untouched) {
+  border-color: #a94442;
+}
+
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
