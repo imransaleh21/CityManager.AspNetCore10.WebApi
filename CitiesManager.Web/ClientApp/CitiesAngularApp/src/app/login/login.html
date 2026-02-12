@@ -1,0 +1,88 @@
+<div class="box full-size-height">
+  <div class="form-container">
+    <h2 class="text-large text-blue text-center">Welcome Back</h2>
+    <p class="text-center text-grey mb">Login to Cities Manager</p>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="mt mb text-center">
+      <div class="box" style="background-color: #d4edda; border-color: #c3e6cb;">
+        <p class="text-green">✓ {{ successMessage }}</p>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="mt mb text-center">
+      <div class="box" style="background-color: #f8d7da; border-color: #f5c6cb;">
+        <p class="text-red">✕ {{ errorMessage }}</p>
+      </div>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Email Field -->
+      <div class="form-field">
+        <div>
+          <label class="form-label">Email Address</label>
+        </div>
+        <div>
+          <input 
+            type="email" 
+            class="form-input" 
+            formControlName="email" 
+            placeholder="Enter your email"
+            autocomplete="email"
+          />
+          <div *ngIf="email?.invalid && (email?.dirty || email?.touched || isSubmitted)" class="text-red mt">
+            <span *ngIf="email?.errors?.['required']">Email is required</span>
+            <span *ngIf="email?.errors?.['email']">Invalid email address</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-field">
+        <div>
+          <label class="form-label">Password</label>
+        </div>
+        <div>
+          <input 
+            type="password" 
+            class="form-input" 
+            formControlName="password" 
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+          <div *ngIf="password?.invalid && (password?.dirty || password?.touched || isSubmitted)" class="text-red mt">
+            <span *ngIf="password?.errors?.['required']">Password is required</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="button-panel mt">
+        <button 
+          type="submit" 
+          class="button button-blue-back"
+          [disabled]="isSubmitted && loginForm.invalid"
+        >
+          Login
+        </button>
+        <button 
+          type="button" 
+          class="button ml" 
+          (click)="onReset()"
+        >
+          Clear
+        </button>
+      </div>
+    </form>
+
+    <!-- Register Link -->
+    <div class="text-center mt">
+      <p class="text-grey">
+        Don't have an account? 
+        <a [routerLink]="['/register']" class="text-blue">Register here</a>
+      </p>
+    </div>
+  </div>
+</div>

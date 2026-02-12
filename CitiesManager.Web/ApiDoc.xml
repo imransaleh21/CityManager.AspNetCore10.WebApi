@@ -4,6 +4,48 @@
         <name>CitiesManager.Web</name>
     </assembly>
     <members>
+        <member name="T:CitiesManager.Web.Controllers.v1.AccountController">
+            <summary>
+            Controller responsible for handling user account-related actions such as registration and login.
+            </summary>
+        </member>
+        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.#ctor(Microsoft.AspNetCore.Identity.UserManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationUser},Microsoft.AspNetCore.Identity.SignInManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationUser},Microsoft.AspNetCore.Identity.RoleManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationRole})">
+            <summary>
+            Constructor for AccountController, which initializes the UserManager, SignInManager, and RoleManager for handling user registration and authentication.
+            </summary>
+            <param name="userManager"></param>
+            <param name="signInManager"></param>
+            <param name="roleManager"></param>
+        </member>
+        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.PostRegister(CitiesManager.Core.DTO.RegisterDTO)">
+            <summary>
+            Registers a new user with the provided registration details. 
+            Validates the input and creates a new ApplicationUser if the registration is successful. Optionally signs in the user after registration.
+            </summary>
+            <param name="registerDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.IsEmailInUse(System.String)">
+            <summary>
+            Checks if the provided email is already associated with an existing user account.
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.PostLogin(CitiesManager.Core.DTO.LoginDTO)">
+            <summary>
+            Authenticates a user with the provided login credentials. Validates the input and attempts to sign in the user using the SignInManager.
+            </summary>
+            <param name="loginDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.GetLogout">
+            <summary>
+            Logs out the currently authenticated user by signing them out using the SignInManager.
+            This will invalidate the user's authentication session.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CitiesManager.Web.Controllers.v1.CitiesController.GetCities">
             <summary>
             To get all cities from database with cityId and cityName
