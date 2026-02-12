@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CitiesManager.Web.Controllers.v1
 {
+    /// <summary>
+    /// Controller responsible for handling user account-related actions such as registration and login.
+    /// </summary>
     [AllowAnonymous]
     [ApiVersion("1.0")]
     public class AccountController : CustomControllerBase
@@ -14,7 +17,13 @@ namespace CitiesManager.Web.Controllers.v1
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
-        public AccountController(UserManager<ApplicationUser> userManager, 
+        /// <summary>
+        /// Constructor for AccountController, which initializes the UserManager, SignInManager, and RoleManager for handling user registration and authentication.
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="roleManager"></param>
+        public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<ApplicationRole> roleManager)
         {
@@ -23,6 +32,12 @@ namespace CitiesManager.Web.Controllers.v1
             _roleManager = roleManager;
         }
 
+        /// <summary>
+        /// Registers a new user with the provided registration details. 
+        /// Validates the input and creates a new ApplicationUser if the registration is successful. Optionally signs in the user after registration.
+        /// </summary>
+        /// <param name="registerDTO"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<ActionResult<ApplicationUser>> PostRegister(RegisterDTO registerDTO)
         {
@@ -38,7 +53,7 @@ namespace CitiesManager.Web.Controllers.v1
                 PersonName = registerDTO.PersonName,
             };
             IdentityResult identityResult = await _userManager.CreateAsync(user, registerDTO.Password);
-            if(identityResult.Succeeded)
+            if (identityResult.Succeeded)
             {
                 // Optionally sign in the user after registration
                 await _signInManager.SignInAsync(user, isPersistent: false);
@@ -51,11 +66,58 @@ namespace CitiesManager.Web.Controllers.v1
             }
         }
 
+        /// <summary>
+        /// Checks if the provided email is already associated with an existing user account.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet("IsEmailInUse")]
         public async Task<bool> IsEmailInUse(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             return user == null;
+        }
+
+        /// <summary>
+        /// Authenticates a user with the provided login credentials. Validates the input and attempts to sign in the user using the SignInManager.
+        /// </summary>
+        /// <param name="loginDTO"></param>
+        /// <returns></returns>
+        [HttpPost("login")]
+        public async Task<IActionResult> PostLogin(LoginDTO loginDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                string errorMsg = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMsg);
+            }
+            var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, isPersistent: false, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                ApplicationUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
+                if (user == null)
+                {
+                    return NoContent();
+                }
+                return Ok(new { PersonName = user.PersonName, email = user.Email });
+            }
+            else
+            {
+                return Problem("Invalid login attempt.");
+            }
+        }
+
+        /// <summary>
+        /// Logs out the currently authenticated user by signing them out using the SignInManager.
+        /// This will invalidate the user's authentication session.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("logout")]
+        public async Task<IActionResult> GetLogout()
+        {
+            await _signInManager.SignOutAsync();
+            return NoContent();
         }
     }
 }
