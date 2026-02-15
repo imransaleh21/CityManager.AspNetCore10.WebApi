@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using CitiesManager.Core.DTO;
+using CitiesManager.Core.ServiceContracts;
 using CitiesManager.Infrastructure.Identity.IdentityEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,7 @@ namespace CitiesManager.Web.Controllers.v1
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IJwtService _jwtService;
         /// <summary>
         /// Constructor for AccountController, which initializes the UserManager, SignInManager, and RoleManager for handling user registration and authentication.
         /// </summary>
@@ -25,11 +27,26 @@ namespace CitiesManager.Web.Controllers.v1
         /// <param name="roleManager"></param>
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager,
+            IJwtService jwtService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _jwtService = jwtService;
+        }
+
+
+        /// <summary>
+        /// Checks if the provided email is already associated with an existing user account.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpGet("IsEmailInUse")]
+        public async Task<bool> IsEmailInUse(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user == null;
         }
 
         /// <summary>
@@ -57,7 +74,16 @@ namespace CitiesManager.Web.Controllers.v1
             {
                 // Optionally sign in the user after registration
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return Ok(user);
+
+                // Generate JWT token for the newly registered user
+                UserTokenRequest userTokenRequest = new UserTokenRequest
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    PersonName = user.PersonName
+                };
+               AuthenticationResponse authenticationResponse = _jwtService.CreateJwtToken(userTokenRequest);
+                return Ok(authenticationResponse);
             }
             else
             {
@@ -65,19 +91,6 @@ namespace CitiesManager.Web.Controllers.v1
                 return Problem(errorMsg);
             }
         }
-
-        /// <summary>
-        /// Checks if the provided email is already associated with an existing user account.
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        [HttpGet("IsEmailInUse")]
-        public async Task<bool> IsEmailInUse(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-            return user == null;
-        }
-
         /// <summary>
         /// Authenticates a user with the provided login credentials. Validates the input and attempts to sign in the user using the SignInManager.
         /// </summary>
@@ -100,7 +113,15 @@ namespace CitiesManager.Web.Controllers.v1
                 {
                     return NoContent();
                 }
-                return Ok(new { PersonName = user.PersonName, email = user.Email });
+                // Generate JWT token for the authenticated user after successful login
+                UserTokenRequest userTokenRequest = new UserTokenRequest
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    PersonName = user.PersonName
+                };
+                AuthenticationResponse authenticationResponse = _jwtService.CreateJwtToken(userTokenRequest);
+                return Ok(authenticationResponse);
             }
             else
             {

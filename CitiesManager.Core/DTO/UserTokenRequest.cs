@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CitiesManager.Core.DTO
+﻿namespace CitiesManager.Core.DTO
 {
     public class UserTokenRequest
     {

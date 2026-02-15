@@ -14,6 +14,13 @@ namespace CitiesManager.Infrastructure.AuthenticationService
         {
             _configuration = configuration;
         }
+        /// <summary>
+        /// Generates a JWT token based on the provided user token request.
+        /// The token includes claims such as user ID, email, and person name, and is signed using a secret key from the configuration.
+        /// The token also has an expiration time defined in the configuration.
+        /// </summary>
+        /// <param name="userTokenRequest"></param>
+        /// <returns></returns>
         public AuthenticationResponse CreateJwtToken(UserTokenRequest userTokenRequest)
         {
             DateTime expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt: EXPIRATION_MIN"]));
