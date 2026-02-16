@@ -51,9 +51,11 @@ export class LoginComponent {
 
     this.accountService.login(loginUser).subscribe({
       next: (response) => {
-        console.log('✅ Login successful:', response);
         this.successMessage = 'Login successful! Redirecting...';
         this.accountService.currentUserName = response.email || null;
+
+        // Store the token in localStorage
+        localStorage.setItem('authToken', response.token);
         // Redirect to cities page after .1 second
         setTimeout(() => {
           this.router.navigate(['/cities']);

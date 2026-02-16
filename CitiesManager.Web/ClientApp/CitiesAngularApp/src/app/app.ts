@@ -16,6 +16,8 @@ export class App {
     this.accountService.logout().subscribe({
       next: (response: string) => {
         this.accountService.currentUserName = null;
+        // remove jwt token while log out
+        localStorage.removeItem("authToken");
         this.router.navigate(['/login']);
       },
       error: (error) => { console.log(error); },

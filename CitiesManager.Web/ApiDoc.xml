@@ -9,7 +9,7 @@
             Controller responsible for handling user account-related actions such as registration and login.
             </summary>
         </member>
-        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.#ctor(Microsoft.AspNetCore.Identity.UserManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationUser},Microsoft.AspNetCore.Identity.SignInManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationUser},Microsoft.AspNetCore.Identity.RoleManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationRole})">
+        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.#ctor(Microsoft.AspNetCore.Identity.UserManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationUser},Microsoft.AspNetCore.Identity.SignInManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationUser},Microsoft.AspNetCore.Identity.RoleManager{CitiesManager.Infrastructure.Identity.IdentityEntities.ApplicationRole},CitiesManager.Core.ServiceContracts.IJwtService)">
             <summary>
             Constructor for AccountController, which initializes the UserManager, SignInManager, and RoleManager for handling user registration and authentication.
             </summary>
@@ -17,19 +17,19 @@
             <param name="signInManager"></param>
             <param name="roleManager"></param>
         </member>
+        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.IsEmailInUse(System.String)">
+            <summary>
+            Checks if the provided email is already associated with an existing user account.
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
         <member name="M:CitiesManager.Web.Controllers.v1.AccountController.PostRegister(CitiesManager.Core.DTO.RegisterDTO)">
             <summary>
             Registers a new user with the provided registration details. 
             Validates the input and creates a new ApplicationUser if the registration is successful. Optionally signs in the user after registration.
             </summary>
             <param name="registerDTO"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CitiesManager.Web.Controllers.v1.AccountController.IsEmailInUse(System.String)">
-            <summary>
-            Checks if the provided email is already associated with an existing user account.
-            </summary>
-            <param name="email"></param>
             <returns></returns>
         </member>
         <member name="M:CitiesManager.Web.Controllers.v1.AccountController.PostLogin(CitiesManager.Core.DTO.LoginDTO)">

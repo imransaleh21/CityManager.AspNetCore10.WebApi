@@ -23,7 +23,7 @@ namespace CitiesManager.Infrastructure.AuthenticationService
         /// <returns></returns>
         public AuthenticationResponse CreateJwtToken(UserTokenRequest userTokenRequest)
         {
-            DateTime expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt: EXPIRATION_MIN"]));
+            DateTime expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:EXPIRATION_MIN"]));
             Claim[] claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userTokenRequest.UserId.ToString()), // Subject claim with user ID
@@ -36,15 +36,15 @@ namespace CitiesManager.Infrastructure.AuthenticationService
 
             // Create a symmetric security key using the secret key from configuration
             SymmetricSecurityKey key = new 
-                SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["Jwt: SECRET_KEY"]));
+                SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["Jwt:SECRET_KEY"]));
 
             // Create signing credentials using the security key and HMAC-SHA256 algorithm
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             // Create the JWT token
             JwtSecurityToken token = new JwtSecurityToken(
-                issuer: _configuration["Jwt: ISSUER"],
-                audience: _configuration["Jwt: AUDIENCE"],
+                issuer: _configuration["Jwt:ISSUER"],
+                audience: _configuration["Jwt:AUDIENCE"],
                 claims: claims,
                 expires: expiration,
                 signingCredentials: creds
