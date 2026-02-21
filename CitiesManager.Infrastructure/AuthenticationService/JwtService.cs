@@ -28,7 +28,7 @@ namespace CitiesManager.Infrastructure.AuthenticationService
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userTokenRequest.UserId.ToString()), // Subject claim with user ID
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // JWT ID for uniqueness
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), // Issued at claim
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64), // Issued at claim as Unix timestamp
 
                 new Claim(ClaimTypes.NameIdentifier, userTokenRequest.Email.ToString()), // Unique identifier for the user (email)
                 new Claim(ClaimTypes.Name, userTokenRequest.PersonName ?? string.Empty)
@@ -36,7 +36,7 @@ namespace CitiesManager.Infrastructure.AuthenticationService
 
             // Create a symmetric security key using the secret key from configuration
             SymmetricSecurityKey key = new 
-                SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["Jwt:SECRET_KEY"]));
+                SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["Jwt:SECRET_KEY"]!));
 
             // Create signing credentials using the security key and HMAC-SHA256 algorithm
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

@@ -3,14 +3,28 @@ using CitiesManager.Core.ServiceContracts;
 using CitiesManager.Infrastructure.AuthenticationService;
 using CitiesManager.Infrastructure.DataBaseContext;
 using CitiesManager.Infrastructure.Identity.IdentityEntities;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers( options =>
+{
+    options.Filters.Add(new ProducesAttribute("application/json"));
+    options.Filters.Add(new ConsumesAttribute("application/json"));
+
+    var policy = new AuthorizationPolicyBuilder()
+    .RequireAuthenticatedUser().Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
 
 // Add the JWT service to the dependency injection container, allowing it to be injected into controllers or other services that require JWT functionality.
 builder.Services.AddTransient<IJwtService, JwtService>();
@@ -64,7 +78,9 @@ builder.Services.AddCors(options => {
     });
 });
 
-// 
+// ASP.NET Core Identity is configured with custom options for password requirements
+// and is set up to use Entity Framework Core for storing user and role information in the database.
+// The UserStore and RoleStore are also specified to use the custom ApplicationUser and ApplicationRole classes, along with the ApplicationDbContext for database operations.
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 3;
@@ -78,6 +94,29 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>()
     .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>()
     ;
+
+//
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer( options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:ISSUER"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:AUDIENCE"],
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SECRET_KEY"]!))
+        };
+
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
