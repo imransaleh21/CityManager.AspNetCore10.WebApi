@@ -28,4 +28,10 @@ export class AccountService {
   logout(): Observable<any> {
     return this.httpClient.get(`${API_BASE_URL}logout`);
   }
+  generateNewToken(): Observable<any> {
+    var authToken = localStorage['authToken'];
+    var refreshToken = localStorage['refreshToken'];
+    const headers = new HttpHeaders().append('Content-Type', 'application/json');
+    return this.httpClient.post(`${API_BASE_URL}generate-new-token`, { token: authToken, refreshToken: refreshToken }, { headers });
+  }
 }

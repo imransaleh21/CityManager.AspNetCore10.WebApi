@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace CitiesManager.Infrastructure.AuthenticationService
 {
@@ -31,7 +32,8 @@ namespace CitiesManager.Infrastructure.AuthenticationService
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64), // Issued at claim as Unix timestamp
 
                 new Claim(ClaimTypes.NameIdentifier, userTokenRequest.Email.ToString()), // Unique identifier for the user (email)
-                new Claim(ClaimTypes.Name, userTokenRequest.PersonName ?? string.Empty)
+                new Claim(ClaimTypes.Name, userTokenRequest.PersonName ?? string.Empty),
+                new Claim(ClaimTypes.Email, userTokenRequest.Email ?? string.Empty)
             };
 
             // Create a symmetric security key using the secret key from configuration
@@ -60,8 +62,51 @@ namespace CitiesManager.Infrastructure.AuthenticationService
                 PersonName = userTokenRequest.PersonName,
                 Email = userTokenRequest.Email,
                 Token = finalToken,
-                Expiration = expiration
+                Expiration = expiration,
+                RefreshToken = GenerateRefreshToken(),
+                RefreshTokenExpirationDateTime = DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["RefreshToken:EXPIRATION_MIN"]!))
             };
+        }
+
+        public ClaimsPrincipal? GetPrincipalFromJwtToken(string? jwtToken)
+        {
+            var tokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateAudience = true,
+                ValidAudience = _configuration["Jwt:AUDIENCE"],
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["Jwt:ISSUER"],
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["Jwt:SECRET_KEY"]!)),
+                ValidateLifetime = false // Jwt token may be expired, but we want to get the claims from it for refresh token validation
+            };
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out SecurityToken validatedToken);
+
+            if (validatedToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+            return claimsPrincipal;
+        }
+
+        /// <summary>
+        /// Generates a cryptographically secure random refresh token encoded as a Base64 string.
+        /// </summary>
+        /// <remarks>The generated token is suitable for use in authentication scenarios where a secure,
+        /// unpredictable value is required. Each call produces a unique token. The caller is responsible for securely
+        /// storing and managing the token.</remarks>
+        /// <returns>A Base64-encoded string representing a randomly generated refresh token.</returns>
+        private string GenerateRefreshToken()
+        {
+            byte[] bytes = new byte[64];
+            var randomNumberGenerator = RandomNumberGenerator
+                .Create();
+            randomNumberGenerator.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
         }
     }
 }

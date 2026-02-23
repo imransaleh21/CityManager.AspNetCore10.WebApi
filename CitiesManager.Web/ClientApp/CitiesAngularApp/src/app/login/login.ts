@@ -50,18 +50,20 @@ export class LoginComponent {
     };
 
     this.accountService.login(loginUser).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.successMessage = 'Login successful! Redirecting...';
         this.accountService.currentUserName = response.email || null;
 
         // Store the token in localStorage
         localStorage.setItem('authToken', response.token);
+        // Store refresh token in localStorage
+        localStorage.setItem('refreshToken', response.refreshToken);
         // Redirect to cities page after .1 second
         setTimeout(() => {
           this.router.navigate(['/cities']);
         }, 100);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('❌ Login error:', error);
         
         if (error.error && typeof error.error === 'string') {

@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CitiesService } from '../services/cities.service';
+import { AccountService } from '../services/account';
 import { City } from '../models/city';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -21,6 +22,7 @@ export class CitiesComponent implements OnInit {
 
   constructor(
     private citiesService: CitiesService,
+    private authService: AccountService,
     private cdr: ChangeDetectorRef
   ) {
     this.postCityForm = new FormGroup({
@@ -148,5 +150,20 @@ export class CitiesComponent implements OnInit {
 
   isEditing(city: City): boolean {
     return this.editingCityId === city.cityId;
+  }
+  // 
+  refreshClicked(): void {
+    this.authService.generateNewToken().subscribe({
+      next: (response: any) => {
+        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('refreshToken', response.refreshToken);
+        this.loadCities();
+      },
+      error: (error: any) => {
+        console.error('❌ Error refreshing token:', error);
+      },
+      complete: () => {
+      }
+    });
   }
 }

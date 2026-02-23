@@ -78,11 +78,12 @@ export class RegisterComponent {
 
     this.accountService.register(registerUser).subscribe({
       next: (response) => {
-        console.log('✅ Registration successful:', response);
         this.successMessage = 'Registration successful! Redirecting to cities...';
 
         // Store the token in localStorage
-        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('authToken', response.Token);
+        // Store refresh token in localStorage
+        localStorage.setItem('refreshToken', response.RefreshToken);
         // Redirect to cities page after 2 seconds
         setTimeout(() => {
           this.router.navigate(['/cities']);
